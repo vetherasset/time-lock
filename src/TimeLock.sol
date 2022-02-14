@@ -54,7 +54,6 @@ contract TimeLock is ITimeLock {
 
     receive() external payable {}
 
-    /* ========== RESTRICTED FUNCTIONS ========== */
     modifier onlyTimeLock() {
         require(msg.sender == address(this), "not time lock");
         _;
@@ -66,12 +65,8 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Sets the the new value of {delay}.
-     * It allows setting of new delay value through queued tx by the admin
-     *
-     * Requirements:
-     * - only current contract can call it
-     * - `_delay` param must be within the min and max delay range
+     * @notice Sets the the new value of {delay}.
+     * @param _delay Seconds to delay
      */
     function setDelay(uint _delay) external onlyTimeLock {
         require(_delay >= MIN_DELAY, "delay < min");
@@ -81,11 +76,8 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Sets the the new value of {_pendingAdmin}.
-     * It allows setting of new pendingAdmin value through queued tx by the admin
-     *
-     * Requirements:
-     * - only current admin can call it
+     * @notice Sets the the new value of {_pendingAdmin}.
+     * @param _pendingAdmin Address of next admin
      */
     function setPendingAdmin(address _pendingAdmin) external onlyAdmin {
         pendingAdmin = _pendingAdmin;
@@ -93,10 +85,7 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Sets {pendingAdmin} to admin of current contract.
-     *
-     * Requirements:
-     * - only callable by {pendingAdmin}
+     * @notice Sets {pendingAdmin} to admin of current contract.
      */
     function acceptAdmin() external {
         require(msg.sender == pendingAdmin, "not pending admin");
@@ -115,6 +104,14 @@ contract TimeLock is ITimeLock {
         return keccak256(abi.encode(target, value, signature, data, eta));
     }
 
+    /**
+     * @notice Computes transaction hash.
+     * @param target Address to call
+     * @param value Amount of ETH to send
+     * @param signature Function signature
+     * @param data Data to send, function inputs
+     * @param eta Timestamp
+     */
     function getTxHash(
         address target,
         uint value,
@@ -126,11 +123,12 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Queues a transaction by setting its status in {queuedTransactions} mapping.
-     *
-     * Requirements:
-     * - only callable by {admin}
-     * - `eta` must lie in future compared to delay referenced from current block
+     * @notice Queues a transaction by setting its status in {queuedTransactions} mapping.
+     * @param target Address to call
+     * @param value Amount of ETH to send
+     * @param signature Function signature
+     * @param data Data to send, function inputs
+     * @param eta Timestamp
      */
     function queueTransaction(
         address target,
@@ -149,10 +147,12 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Cancels a transaction by setting its status in {queuedTransactions} mapping.
-     *
-     * Requirements:
-     * - only callable by {admin}
+     * @notice Cancels a transaction by setting its status in {queuedTransactions} mapping.
+     * @param target Address to call
+     * @param value Amount of ETH to send
+     * @param signature Function signature
+     * @param data Data to send, function inputs
+     * @param eta Timestamp
      */
     function cancelTransaction(
         address target,
@@ -168,15 +168,12 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @dev Executes a transaction by making a low level call to its `target`.
-     * The call reverts if the low-level call made to `target` reverts.
-     *
-     * Requirements:
-     * - only callable by {admin}
-     * - tx must already be queued
-     * - current timestamp is ahead of tx's eta
-     * - grace period associated with the tx must not have passed
-     * - the low-level call to tx's `target` must not revert
+     * @notice Executes a transaction by making a low level call to its `target`.
+     * @param target Address to call
+     * @param value Amount of ETH to send
+     * @param signature Function signature
+     * @param data Data to send, function inputs
+     * @param eta Timestamp
      */
     function executeTransaction(
         address target,
