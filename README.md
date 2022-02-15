@@ -26,18 +26,23 @@ dapp build
 # test
 dapp test -v
 
-# ---- Rinkeby ----
-
-# ---- Mainnet ----
-
 # deploy
-dapp create src/TimeLock.sol:TimeLock --verify
+export ETHERSCAN_API_KEY=...
+
+# 2 weeks
+DELAY=1209600
+dapp create src/TimeLock.sol:TimeLock $DELAY --verify
 
 # verify
-export ETHERSCAN_API_KEY=...
 TIME_LOCK=
-dapp verify-contract src/TimeLock.sol:TimeLock $TIME_LOCK
+dapp verify-contract src/TimeLock.sol:TimeLock $TIME_LOCK $DELAY
 
 # flatten
 hevm flatten --source-file src/TimeLock.sol > tmp/flat.sol
+
+# ---- Rinkeby ----
+0x4402A7C8829489705852e54Da50Ebec60C8C86a8
+
+# ---- Mainnet ----
+0x0df9220aEaA28cE8bA06ADd7c5B3Cc6e7C1Cd511
 ```
