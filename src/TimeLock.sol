@@ -65,17 +65,6 @@ contract TimeLock is ITimeLock {
     }
 
     /**
-     * @notice Sets the the new value of {delay}.
-     * @param _delay Seconds to delay
-     */
-    function setDelay(uint _delay) external onlyTimeLock {
-        require(_delay >= MIN_DELAY, "delay < min");
-        require(_delay <= MAX_DELAY, "delay > max");
-        delay = _delay;
-        emit NewDelay(_delay);
-    }
-
-    /**
      * @notice Sets the the new value of {_pendingAdmin}.
      * @param _pendingAdmin Address of next admin
      */
@@ -92,6 +81,17 @@ contract TimeLock is ITimeLock {
         admin = msg.sender;
         pendingAdmin = address(0);
         emit NewAdmin(admin);
+    }
+
+    /**
+     * @notice Sets the the new value of {delay}.
+     * @param _delay Seconds to delay
+     */
+    function setDelay(uint _delay) external onlyTimeLock {
+        require(_delay >= MIN_DELAY, "delay < min");
+        require(_delay <= MAX_DELAY, "delay > max");
+        delay = _delay;
+        emit NewDelay(_delay);
     }
 
     function _getTxHash(
