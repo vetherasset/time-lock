@@ -32,10 +32,10 @@ contract TimeLock is ITimeLock {
         uint eta
     );
 
-    uint public constant MIN_DELAY = 2 days;
-    uint public constant MAX_DELAY = 30 days;
+    uint private constant MIN_DELAY = 2 days;
+    uint private constant MAX_DELAY = 30 days;
     //  Time period a tx is valid for execution after eta has elapsed.
-    uint public constant GRACE_PERIOD = 14 days;
+    uint private constant GRACE_PERIOD = 14 days;
 
     address public admin;
     address public pendingAdmin;

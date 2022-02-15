@@ -4,10 +4,6 @@ pragma solidity 0.8.9;
 interface ITimeLock {
     function delay() external view returns (uint);
 
-    function GRACE_PERIOD() external pure returns (uint);
-
-    function acceptAdmin() external;
-
     function queuedTransactions(bytes32 hash) external view returns (bool);
 
     function queueTransaction(
